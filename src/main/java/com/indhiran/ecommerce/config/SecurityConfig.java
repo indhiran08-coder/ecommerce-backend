@@ -32,29 +32,26 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http)
             throws Exception {
         http
-                // Disable CSRF — not needed for stateless JWT APIs
                 .csrf(AbstractHttpConfigurer::disable)
 
-                // Define which endpoints are public vs protected
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
-                                "/api/auth/**",       // login, register — public
-                                "/api/health",        // health check — public
-                                "/swagger-ui/**",     // API docs — public
-                                "/v3/api-docs/**"     // API docs — public
+                                "/api/auth/**",
+                                "/api/health",
+                                "/api/products/**",
+                                "/api/categories/**",
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**"
                         ).permitAll()
-                        .anyRequest().authenticated() // everything else needs JWT
+                        .anyRequest().authenticated()
                 )
 
-                // Stateless — no sessions, JWT only
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
 
-                // Use our custom auth provider
                 .authenticationProvider(authenticationProvider())
 
-                // Add JWT filter BEFORE Spring's default auth filter
                 .addFilterBefore(jwtAuthFilter,
                         UsernamePasswordAuthenticationFilter.class);
 
@@ -63,7 +60,8 @@ public class SecurityConfig {
 
     @Bean
     public AuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        DaoAuthenticationProvider provider =
+                new DaoAuthenticationProvider();
         provider.setUserDetailsService(userDetailsService);
         provider.setPasswordEncoder(passwordEncoder());
         return provider;
@@ -77,7 +75,6 @@ public class SecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        // BCrypt automatically salts passwords — industry standard
         return new BCryptPasswordEncoder();
     }
 

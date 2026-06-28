@@ -31,6 +31,12 @@ public class Order {
     @Column(nullable = false, length = 20)
     private OrderStatus status = OrderStatus.PENDING;
 
+    @Column(length = 500)
+    private String shippingAddress;
+
+    @Column(length = 500)
+    private String notes;
+
     @CreationTimestamp
     private LocalDateTime placedAt;
 

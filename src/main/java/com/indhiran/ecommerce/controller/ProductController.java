@@ -24,31 +24,32 @@ public class ProductController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ApiResponse<ProductResponse>> createProduct(
             @Valid @RequestBody CreateProductRequest request) {
-
-        ProductResponse response = productService.createProduct(request);
+        ProductResponse response =
+                productService.createProduct(request);
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiResponse.success("Product created", response));
+                .body(ApiResponse.success(
+                        "Product created", response));
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponse<Page<ProductResponse>>> getAllProducts(
+    public ResponseEntity<ApiResponse<Page<ProductResponse>>>
+    getAllProducts(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "createdAt") String sortBy,
             @RequestParam(defaultValue = "desc") String sortDir) {
-
-        Page<ProductResponse> products =
-                productService.getAllProducts(page, size, sortBy, sortDir);
-        return ResponseEntity.ok(
-                ApiResponse.success("Products fetched", products));
+        return ResponseEntity.ok(ApiResponse.success(
+                "Products fetched",
+                productService.getAllProducts(
+                        page, size, sortBy, sortDir)));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<ProductResponse>> getProductById(
-            @PathVariable Long id) {
-
+    public ResponseEntity<ApiResponse<ProductResponse>>
+    getProductById(@PathVariable Long id) {
         return ResponseEntity.ok(ApiResponse.success(
-                "Product fetched", productService.getProductById(id)));
+                "Product fetched",
+                productService.getProductById(id)));
     }
 
     @PutMapping("/{id}")
@@ -56,7 +57,6 @@ public class ProductController {
     public ResponseEntity<ApiResponse<ProductResponse>> updateProduct(
             @PathVariable Long id,
             @Valid @RequestBody UpdateProductRequest request) {
-
         return ResponseEntity.ok(ApiResponse.success(
                 "Product updated",
                 productService.updateProduct(id, request)));
@@ -66,29 +66,29 @@ public class ProductController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ApiResponse<Void>> deleteProduct(
             @PathVariable Long id) {
-
         productService.deleteProduct(id);
         return ResponseEntity.ok(
                 ApiResponse.success("Product deleted", null));
     }
 
     @GetMapping("/search")
-    public ResponseEntity<ApiResponse<Page<ProductResponse>>> searchProducts(
+    public ResponseEntity<ApiResponse<Page<ProductResponse>>>
+    searchProducts(
             @RequestParam String keyword,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
-
         return ResponseEntity.ok(ApiResponse.success(
                 "Search results",
-                productService.searchProducts(keyword, page, size)));
+                productService.searchProducts(
+                        keyword, page, size)));
     }
 
     @GetMapping("/category/{categoryId}")
     public ResponseEntity<ApiResponse<Page<ProductResponse>>>
-    getByCategory(@PathVariable Long categoryId,
-                  @RequestParam(defaultValue = "0") int page,
-                  @RequestParam(defaultValue = "10") int size) {
-
+    getByCategory(
+            @PathVariable Long categoryId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
         return ResponseEntity.ok(ApiResponse.success(
                 "Products by category",
                 productService.getProductsByCategory(

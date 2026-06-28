@@ -1,4 +1,3 @@
-
 package com.indhiran.ecommerce.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
